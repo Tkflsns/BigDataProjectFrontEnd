@@ -1,6 +1,5 @@
 import React from 'react'
 import SetMarker from './Setmarker';
-import Curcle from './Curcle';
 
 const MyPosition = (map) => {
     navigator.geolocation.getCurrentPosition((pos) => {
@@ -9,7 +8,6 @@ const MyPosition = (map) => {
         map.panTo(myPos);
         // 현재 위치에 마커
         SetMarker(map, myPos);
-        Curcle(map, myPos);
     });
   return (
     <div>

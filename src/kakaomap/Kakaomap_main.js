@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import MyPosition from './MyPosition';
+import { useLocation } from 'react-router-dom';
+import jsonData from './jsonData';
 
 const Kakaomap_main = () => {
   const [map, setMap] = useState();
-  const [bounds, setBounds] = useState();
+
+  const location = useLocation();
+  const parking = location.state.parking;
+  const classroom = location.state.classroom;
+  const cultural = location.state.cultural;
+  const sports = location.state.sports;
+
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -19,6 +27,7 @@ const Kakaomap_main = () => {
     };
 
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_API_KEY}&autoload=false`;
+
     document.head.appendChild(script);
 
     return () => {
@@ -30,12 +39,31 @@ const Kakaomap_main = () => {
     if (map) {
       map.setMinLevel(2);
       map.setMaxLevel(5);
-      setBounds(map.getBounds());
-      console.log("bounds : ", bounds);
       // 현재 위치 이동
       MyPosition(map);
+      getbound();
+
+      kakao.maps.event.addListener(map, 'dragend', () => {
+        getbound();
+      });
+
+      kakao.maps.event.addListener(map, 'zoom_changed', () => {
+        getbound();
+      });
+
+
     }
   }, [map]);
+
+  const getbound = () => {
+    const bounds = map.getBounds();
+    const { ha, qa, oa, pa } = bounds;
+    // ha:남서쪽위도, qa:남서쪽경도, oa:북동쪽위도, pa:북동쪽경도
+    const data = { parking, classroom, cultural, sports, ha, qa, oa, pa };
+    console.log("data : ", data);
+    //json으로 data전송
+    jsonData(data);
+  };
 
   return <div id="map" style={{ width: '100%', height: '100vh' }} />;
 };
