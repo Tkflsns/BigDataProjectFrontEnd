@@ -1,7 +1,7 @@
 
-export default async function jsonData(data) {
+export default async function jsonData({data, setMarkerdata}) {
     try {
-        const response = await fetch('http://localhost:8080/record', {
+        const response = await fetch('http://:8080/record', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -10,10 +10,11 @@ export default async function jsonData(data) {
             body: JSON.stringify(data)
         });
         const result = await response.json();
-        console.log("result : ", resultJson)
+        console.log("result : ", result)
+        setMarkerdata(result);
     } catch (error) {
         console.error('data send fail', error);
-    }
+    }   
 }
 
 

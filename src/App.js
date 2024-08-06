@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
-import SearchPage from './kakaomap/SearchPage';
+import SearchPage from './mainpage/SearchPage';
 import Kakaomap_main from './kakaomap/Kakaomap_main';
 
 
