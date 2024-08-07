@@ -14,8 +14,8 @@ export default function SearchPage() {
 
   return (
     <div className='w-full h-full'>
-        <form className='flex items-center justify-center min-h-screen'>
-            <table className='bg-gray-200 border border-blue-700'>
+        <form className='flex items-center justify-center min-h-screen '>
+            <table className='bg-gray-200 border-2 border-blue-700 rounded'>
                 <tbody>
                 <tr><th>공공개방시설 검색</th></tr>
                 <tr><td><input type='checkbox' id='parking' onChange={() => setParking(!parking)}/>주차장</td></tr>
@@ -24,7 +24,7 @@ export default function SearchPage() {
                 <tr><td><input type='checkbox' id='sports' onChange={() => setSports(!sports)}/>체육시설</td></tr>
                 </tbody>
             </table>
-            <input type='button' onClick={handleClick} id='searchButton' value='검색' className='border bg-gray-200 w-15 h-10 p-1 ml-2 rounded-r-md'/>
+            <input type='button' onClick={handleClick} id='searchButton' value='검색' className='text-white border bg-blue-500 hover:bg-blue-700 w-15 h-10 p-1 ml-2 rounded'/>
         </form>
     </div>
   )

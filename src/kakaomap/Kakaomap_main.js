@@ -50,13 +50,10 @@ const Kakaomap_main = () => {
       MyPosition(map);
       getbound();
 
-      kakao.maps.event.addListener(map, 'dragend', () => {
+      kakao.maps.event.addListener(map, 'tilesloaded', () => {
         getbound();
       });
 
-      kakao.maps.event.addListener(map, 'zoom_changed', () => {
-        getbound();
-      });
   }, [map]);
 
   useEffect(() => {
@@ -104,7 +101,7 @@ const Kakaomap_main = () => {
     jsonData(data, setMarkerdata);
   };
 
-  return <div id="map" style={{ width: '100%', height: '100vh' }} />;
+  return <div id="map" className='w-full h-screen' />;
 };
 
 export default Kakaomap_main;
