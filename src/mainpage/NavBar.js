@@ -23,11 +23,9 @@ export default function NavBar() {
             </div>
 
             <ul className="flex space-x-6">
-              <li><a href="#" className="text-gray-700 hover:text-blue-600 transition duration-200">Home</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-blue-600 transition duration-200">Features</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-blue-600 transition duration-200">Pricing</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-blue-600 transition duration-200">FAQs</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-blue-600 transition duration-200">About</a></li>
+              <li><a href="/" className="text-gray-700 hover:text-blue-600 transition duration-200">Home</a></li>
+              <li><a href="/" className="text-gray-700 hover:text-blue-600 transition duration-200">FAQs</a></li>
+              <li><a href="/" className="text-gray-700 hover:text-blue-600 transition duration-200">About</a></li>
             </ul>
 
             <div className="flex items-center space-x-4">

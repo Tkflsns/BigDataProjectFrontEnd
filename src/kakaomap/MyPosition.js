@@ -1,5 +1,4 @@
 import React from 'react'
-import SetMyMarker from './SetMymarker';
 
 const MyPosition = (map) => {
     navigator.geolocation.getCurrentPosition((pos) => {
@@ -7,7 +6,9 @@ const MyPosition = (map) => {
         console.log("MyPosition : ", myPos);
         map.panTo(myPos);
         // 내 현재 위치에 마커
-        SetMyMarker(map, myPos);
+        const marker = new kakao.maps.Marker();
+        marker.setPosition(myPos);
+        marker.setMap(map);
     });
   return (
     <div>

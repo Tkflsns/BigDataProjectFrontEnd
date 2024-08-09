@@ -16,6 +16,18 @@ const LoginModal = ({isOpen, onClose}) => {
             >
                 Login with Google
             </button>
+            <button
+                onClick={() => window.location.href = 'http://localhost:8080/oauth2/authorization/google'}
+                className='bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 w-full'
+            >
+                Login with Google
+            </button>
+            <button
+                onClick={() => window.location.href = 'http://localhost:8080/oauth2/authorization/google'}
+                className='bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 w-full'
+            >
+                Login with Google
+            </button>
         </div>
     </div>
   );
