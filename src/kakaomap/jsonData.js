@@ -11,7 +11,7 @@ export default async function jsonData({data, setMarkerdata}) {
     //     qa:1,
     //     sports:false
     // }
-    console.log("data : ", data);
+    // console.log("data : ", data);
     try {
         const response = await fetch('http://10.125.121.183:8080/search/record', {
             method: 'POST',
@@ -25,7 +25,7 @@ export default async function jsonData({data, setMarkerdata}) {
             throw new Error('Network response was not ok');
         }
         const result = await response.json();
-        console.log("result : ", result)
+        // console.log("result : ", result)
         setMarkerdata(result);
     } catch (error) {
         console.error('data send fail', error);

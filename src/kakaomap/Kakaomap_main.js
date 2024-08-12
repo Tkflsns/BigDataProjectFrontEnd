@@ -4,9 +4,7 @@ import { useLocation } from 'react-router-dom';
 import jsonData from './jsonData';
 import MarkerFilter from './MarkerFilter';
 import SetMarker from './SetMarker';
-import SideOverlay from './SideOverlay';
 import SideContent from './SideContent';
-import parkingJson from './parking.json'
 
 export default function Kakaomap_main() {
   const [map, setMap] = useState(null);
@@ -17,6 +15,7 @@ export default function Kakaomap_main() {
   const [classroomTm, setClassroomTm] = useState([]);
   const [culturalTm, setCulturalTm] = useState([]);
   const [sportsTm, setSportsTm] = useState([]);
+  const [SC, setSC] = useState([]);
   const mapRef = useRef();
 
   const location = useLocation();
@@ -52,7 +51,7 @@ export default function Kakaomap_main() {
 
   useEffect(() => {
     if (!map) return;
-    map.setMinLevel(2);
+    map.setMinLevel(1);
     map.setMaxLevel(5);
     // 현재 위치 이동
     MyPosition(map);
@@ -80,7 +79,7 @@ export default function Kakaomap_main() {
     // console.log("parkingTm : ", parkingTm);
     // console.log("swnepos : ", swNePosition);
     if (!parkingTm || parkingTm.length === 0) return;
-    console.log("parkingTm : ", parkingTm);
+    // console.log("parkingTm : ", parkingTm);
     const tm = parkingTm;
     const markerImgSrc = './img/parking.png';
     // const tm = parkingTm.filter(item =>
@@ -95,7 +94,7 @@ export default function Kakaomap_main() {
   }, [parkingTm]);
 
   useEffect(() => {
-    console.log("classroomTm : ", classroomTm);
+    // console.log("classroomTm : ", classroomTm);
     if (!classroomTm || classroomTm.length === 0) return;
     const tm = classroomTm;
     const markerImgSrc = './img/classroom.png';
@@ -103,7 +102,7 @@ export default function Kakaomap_main() {
   }, [classroomTm]);
 
   useEffect(() => {
-    console.log("culturalTm : ", culturalTm);
+    // console.log("culturalTm : ", culturalTm);
     if (!culturalTm || culturalTm.length === 0) return;
     const markerImgSrc = './img/cultural.png';
     const tm = culturalTm;
@@ -111,12 +110,18 @@ export default function Kakaomap_main() {
   }, [culturalTm]);
 
   useEffect(() => {
-    console.log("sportsTm : ", sportsTm);
+    // console.log("sportsTm : ", sportsTm);
     if (!sportsTm || sportsTm.length === 0) return;
     const markerImgSrc = './img/sports.png';
     const tm = sportsTm;
     SetMarker({ tm, markerImgSrc, map });
   }, [sportsTm]);
+
+  useEffect(() => {
+    if(!markerdata || markerdata.length === 0) return;
+    let SCData = markerdata.map(item => <SideContent tmData={item}/>);
+    setSC(SCData);
+  }, [markerdata]);
 
   const resizeListener = () => {
     setInnerHeight(window.innerHeight);
@@ -133,7 +138,7 @@ export default function Kakaomap_main() {
     const pa = neLatLng.getLng(); // 북동쪽 경도
 
     setSwNePosition({ha, qa, oa, pa});
-    console.log("bounds : ", bounds);
+    // console.log("bounds : ", bounds);
     // parking:주차장, classroom:강의실,회의실, cultural:문화,숙박, sports:체육시설
     // ha:남서쪽위도swLat, qa:남서쪽경도swLng, oa:북동쪽위도neLat, pa:북동쪽경도neLng
     const data = { parking, classroom, cultural, sports, ha, pa, oa, qa};
@@ -142,11 +147,11 @@ export default function Kakaomap_main() {
   };
 
   return (
-    <div>
-      <div className='fixed h-full w-1/5 right-0 top-15'>
-        <SideContent />
+    <div className='w-full flex'>
+      <div ref={mapRef} className='flex-grow' style={{ height: innerHeight - 73 }} >
       </div>
-      <div ref={mapRef} className='w-4/5' style={{ height: innerHeight - 73 }} >
+      <div className='w-80' style={{ height: innerHeight - 73 }}>
+        {SC}
       </div>
     </div>
   )
