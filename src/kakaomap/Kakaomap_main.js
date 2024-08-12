@@ -71,7 +71,7 @@ export default function Kakaomap_main() {
 
   useEffect(() => {
     if (!markerdata || markerdata.length === 0) return;
-    // console.log("marker : ", markerdata);
+    console.log("marker : ", markerdata);
     MarkerFilter({ markerdata, setParkingTm, setClassroomTm, setCulturalTm, setSportsTm });
   }, [markerdata])
 
@@ -150,7 +150,7 @@ export default function Kakaomap_main() {
     <div className='w-full flex'>
       <div ref={mapRef} className='flex-grow' style={{ height: innerHeight - 73 }} >
       </div>
-      <div className='w-80' style={{ height: innerHeight - 73 }}>
+      <div className='w-80 overflow-y-auto' style={{ height: innerHeight - 73 }}>
         {SC}
       </div>
     </div>

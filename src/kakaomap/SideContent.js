@@ -3,24 +3,24 @@ import React, { useEffect, useState } from 'react'
 export default function SideContent(tmData) {
   const [SCon, setSCon] = useState();
   console.log("tm : ", tmData);
-
+  const tmData2 = tmData.tmData;
   useEffect(() => {
     if (!tmData) return;
     let tm2 = (
-      <div>
-        <div className="py-2 px-3 h-8 bg-gray-200 border-b border-gray-300 text-lg font-bold">
-          {tmData.rsrcNm}
+      <div className='w-full h-full'>
+        <div className="py-1 px-3 bg-gray-200 border-b border-gray-300 text-lg font-bold h-auto">
+          {tmData2.rsrcNm}
         </div>
-        <div>
-          <div className="float-left m-3 mt-5">
-            <img src={tmData.imgFileUrlAddr} width="73" height="70" alt={tmData.rsrcNm} />
+        <div className='flex'>
+          <div className="flex items-center m-1 h-auto max-w-20">
+            <img src={tmData2.imgFileUrlAddr} alt={tmData2.rsrcNm} />
           </div>
-          <div className="ml-24 mt-3">
+          <div className="ml-2 mt-1">
             <div className="overflow-hidden break-all">
-              {tmData.addr} {tmData.daddr}
+              {tmData2.addr} {tmData2.daddr}
             </div>
-            <div className="text-xs text-gray-600 mt-1">(우) {tmData.zip}</div>
-            <a href={tmData.instUrlAddr} target="_blank" rel="noopener noreferrer" className="text-blue-600">
+            <div className="text-xs text-gray-600 mt-1">(우) {tmData2.zip}</div>
+            <a href={tmData2.instUrlAddr} target="_blank" rel="noopener noreferrer" className="text-blue-600">
               예약페이지
             </a>
           </div>
@@ -31,7 +31,7 @@ export default function SideContent(tmData) {
   }, [tmData]);
 
   return (
-    <div className='border-2 rounded-md bg-white-100 shadow-xl '>
+    <div className='border-2 border-blue-300 rounded-md bg-white-100 shadow-xl w-full h-auto pb-2'>
       {SCon}
     </div>
   )
