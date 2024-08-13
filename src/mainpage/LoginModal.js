@@ -10,24 +10,23 @@ const LoginModal = ({isOpen, onClose}) => {
                 <h2 className='text-2xl'>Login</h2>
                 <button onClick={onClose} className='text-gray-500 hover:text-gray-800'>X</button>
             </div>
+            <div className='flex'>
             <button
                 onClick={() => window.location.href = 'http://localhost:8080/oauth2/authorization/google'}
-                className='bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 w-full'
-            >
+                className='bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 w-full mx-1'>
                 Login with Google
             </button>
             <button
                 onClick={() => window.location.href = 'http://localhost:8080/oauth2/authorization/google'}
-                className='bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 w-full'
-            >
-                Login with Google
+                className='bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 w-full mx-1'>
+                Login with Naver
             </button>
             <button
                 onClick={() => window.location.href = 'http://localhost:8080/oauth2/authorization/google'}
-                className='bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 w-full'
-            >
-                Login with Google
+                className='bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 w-full mx-1'>
+                Login with Kakao
             </button>
+            </div>
         </div>
     </div>
   );
