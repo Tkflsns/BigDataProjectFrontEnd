@@ -6,7 +6,7 @@ const OverlayContent = ({ item, onClose }) => {
                           bg-white text-sm leading-relaxed w-auto h-auto">
                 <div className="flex justify-between w-auto py-2 px-3 h-auto bg-gray-200 border-b border-gray-300 text-lg font-bold break-all">
                     <div className='w-auto h-auto'>{item.rsrcNm}&nbsp;&nbsp;</div>
-                    <button onClick={onClose} className='text-gray-500 hover:text-gray-800'>X</button>
+                    <button className='text-gray-500 hover:text-gray-800 onClose'>X</button>
                 </div>
                 <div className="flex">
                     <div className="flex items-center w-20 h-auto m-1">
@@ -17,7 +17,7 @@ const OverlayContent = ({ item, onClose }) => {
                             <p>{item.addr}</p><p>{item.daddr}</p>
                         </div>
                         <div className="text-xs text-gray-600 mt-1">(우) {item.zip}</div>
-                        <a href={item.instUrlAddr} target="_blank" rel="noopener noreferrer" className="text-blue-600">
+                        <a href={item.instUrlAddr} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-100">
                             예약페이지
                         </a>
                     </div>

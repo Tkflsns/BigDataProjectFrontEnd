@@ -10,6 +10,7 @@ export default function Kakaomap_main() {
 	const [map, setMap] = useState(null);
 	const [swNePosition, setSwNePosition] = useState();
 	const [Sm, setSm] = useState();
+	const [chart, setChart] = useState();
 	const [innerHeight, setInnerHeight] = useState(window.innerHeight);
 	const [markerdata, setMarkerdata] = useState([]);
 	const [parkingTm, setParkingTm] = useState([]);
@@ -20,10 +21,8 @@ export default function Kakaomap_main() {
 	const mapRef = useRef();
 
 	const location = useLocation();
-	const parking = location.state.parking;
-	const classroom = location.state.classroom;
-	const cultural = location.state.cultural;
-	const sports = location.state.sports;
+
+	const { parking = false, classroom = false, cultural = false, sports = false } = location.state || {};
 
 
 	useEffect(() => {
@@ -36,7 +35,7 @@ export default function Kakaomap_main() {
 					center: new kakao.maps.LatLng(35.2358704, 129.0768405),
 					level: 4
 				};
-				const newMap = new kakao.maps.Map(container, options)
+				const newMap = new kakao.maps.Map(container, options);
 				setMap(newMap);
 			});
 		};
@@ -64,9 +63,10 @@ export default function Kakaomap_main() {
 
 	useEffect(() => {
 		if (!markerdata || markerdata.length === 0) return;
-		setSm(() => <SideBarMain className="w-auto h-auto" Data={markerdata}/>);
+		setSm(() => <SideBarMain className="w-auto h-auto" Data={markerdata} parking={parking} classroom={classroom} cultural={cultural} sports={sports}/>);
 		console.log("marker : ", markerdata);
-		MarkerFilter({ markerdata, setParkingTm, setClassroomTm, setCulturalTm, setSportsTm });
+		// const chart = MarkerFilter({ markerdata, setParkingTm, setClassroomTm, setCulturalTm, setSportsTm });
+		// setChart(chart);
 	}, [markerdata])
 
 	useEffect(() => {
@@ -128,6 +128,9 @@ export default function Kakaomap_main() {
 
 	return (
 		<div className='w-full flex'>
+			<div className='absolute z-30 -left-6' style={{ height: innerHeight - 73 }}>
+				<MarkerFilter markerdata={markerdata} setParkingTm={setParkingTm} setClassroomTm={setClassroomTm} setCulturalTm={setCulturalTm} setSportsTm={setSportsTm} />
+			</div>
 			<div ref={mapRef} className='flex-grow' style={{ height: innerHeight - 73 }} >
 			</div>
 			<div className='w-80' style={{ height: innerHeight - 73 }}>
