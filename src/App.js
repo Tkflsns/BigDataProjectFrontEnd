@@ -9,19 +9,20 @@ import BoardDetail from './board/BoardDetail';
 
 function App() {
 
-  return (
-    <BrowserRouter>
-    <div className='w-full h-full'>
-      <NavBar/>
-      <Routes>
-        <Route path='/' element={<SearchPage/>}/>
-        <Route path='/kakaomap' element={<Kakaomap_main/>}/>
-        <Route path='/board' element={<BoardModal/>}/>
-        <Route path='/board/:idx' element={<BoardDetail/>}/>
-      </Routes>
-    </div>
-    </BrowserRouter>
-  );
+	return (
+		<BrowserRouter>
+			<div className='w-full h-full'>
+				<NavBar />
+				<Routes>
+					<Route path='/' element={<SearchPage />} />
+					<Route path='/kakaomap' element={<Kakaomap_main />} />
+					<Route path='/board' element={<BoardModal />}>
+						<Route path='/board/:idx' element={<BoardDetail />} />
+					</Route>
+				</Routes>
+			</div>
+		</BrowserRouter>
+	);
 }
 
 export default App;
