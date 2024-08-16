@@ -3,6 +3,8 @@ import './App.css';
 import SearchPage from './mainpage/SearchPage';
 import Kakaomap_main from './kakaomap/Kakaomap_main';
 import NavBar from './mainpage/NavBar';
+import BoardModal from './board/BoardModal';
+import BoardDetail from './board/BoardDetail';
 
 
 function App() {
@@ -14,6 +16,8 @@ function App() {
       <Routes>
         <Route path='/' element={<SearchPage/>}/>
         <Route path='/kakaomap' element={<Kakaomap_main/>}/>
+        <Route path='/board' element={<BoardModal/>}/>
+        <Route path='/board/:idx' element={<BoardDetail/>}/>
       </Routes>
     </div>
     </BrowserRouter>

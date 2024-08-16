@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 
 export default function MarkerFilter({ markerdata, setParkingTm, setClassroomTm, setCulturalTm, setSportsTm }) {
     const [chartData, setChartData] = useState([]);
+    const colors = ['#00ff00', '#00bfff', '#ffa500', '#FF8042'];
 
     useEffect(() => {
         setClassroomTm(null);
@@ -44,20 +45,22 @@ export default function MarkerFilter({ markerdata, setParkingTm, setClassroomTm,
     }, [markerdata])
 
     return (
-        <div className="flex flex-col w-28 h-full">
-            {chartData.map((data, index) => (
-                <div key={index} className="w-full my-2">
-                    <ResponsiveContainer width="100%" height={100}>
-                        <BarChart data={[data]}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="itemName" />
-                            <YAxis />
+        <div className="w-44 h-full">
+                <div className="w-full h-full bg-zinc-800 bg-opacity-60">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                            <Legend layout="horizontal" verticalAlign="top" align="center"/>
+                            <Pie data={chartData} dataKey="sum" nameKey="itemName" outerRadius={50} label>
+                                {
+                                    chartData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={colors[index]}/>
+                                    ))
+                                }
+                            </Pie>
                             <Tooltip/>
-                            <Bar dataKey="sum" fill="#8884d8" />
-                        </BarChart>
+                        </PieChart>
                     </ResponsiveContainer>
                 </div>
-            ))}
         </div>
     );
 };

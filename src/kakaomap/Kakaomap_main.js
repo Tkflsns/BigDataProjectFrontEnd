@@ -57,13 +57,13 @@ export default function Kakaomap_main() {
 		MyPosition(map);
 		getbound();
 
-		kakao.maps.event.addListener(map, 'tilesloaded', () => {getbound()});
+		kakao.maps.event.addListener(map, 'tilesloaded', () => { getbound() });
 
 	}, [map]);
 
 	useEffect(() => {
 		if (!markerdata || markerdata.length === 0) return;
-		setSm(() => <SideBarMain className="w-auto h-auto" Data={markerdata} parking={parking} classroom={classroom} cultural={cultural} sports={sports}/>);
+		setSm(() => <SideBarMain className="w-auto h-auto" Data={markerdata} parking={parking} classroom={classroom} cultural={cultural} sports={sports} />);
 		console.log("marker : ", markerdata);
 		// const chart = MarkerFilter({ markerdata, setParkingTm, setClassroomTm, setCulturalTm, setSportsTm });
 		// setChart(chart);
@@ -128,7 +128,7 @@ export default function Kakaomap_main() {
 
 	return (
 		<div className='w-full flex'>
-			<div className='absolute z-30 -left-6' style={{ height: innerHeight - 73 }}>
+			<div className='absolute z-20 h-64'>
 				<MarkerFilter markerdata={markerdata} setParkingTm={setParkingTm} setClassroomTm={setClassroomTm} setCulturalTm={setCulturalTm} setSportsTm={setSportsTm} />
 			</div>
 			<div ref={mapRef} className='flex-grow' style={{ height: innerHeight - 73 }} >
