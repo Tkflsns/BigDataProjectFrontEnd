@@ -1,101 +1,144 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Link, Outlet } from 'react-router-dom';
+import BoardWrite from './BoardWrite';
+import axios from 'axios';
 
 const BoardModal = ({ isOpen, onClose }) => {
-	if (!isOpen) return null;
-
 	const [boardData, setBoardData] = useState([]);
-	const [currentPage, setCurrentPage] = useState(1);
-	const itemLen = 10;
+	const [detailOpen, setDetailOpen] = useState(false);
+    const [writeOpen, setWriteOpen] = useState(false); // 글쓰기 페이지 열림/닫힘 상태
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemLen = 10;
 
-	const loadBoard = async () => {
+    if (!isOpen) return null;
+
+    const totalPages = Math.ceil(boardData.length / itemLen);
+    const lastPage = currentPage * itemLen;
+    const firstPage = lastPage - itemLen;
+    const currentItems = boardData.slice(firstPage, lastPage);
+
+    const pageNum = [];
+
+	const loadBoardData = async () => {
 		try {
 			const resp = await axios.get('https://raw.githubusercontent.com/Tkflsns/BigDataProjectFrontEnd/main/src/board/boardData.json');
 			setBoardData(resp.data.board);
-
-			console.log("bddt : ", resp.data.board);
+			console.log("Board Data: ", resp.data.board);
 		} catch (error) {
 			console.error("보드데이터 불러오기 실패", error);
 		}
 	};
-
 	useEffect(() => {
-		loadBoard();
-	}, [])
+		loadBoardData();
+	}, [writeOpen])
+	
 
-	const lastPage = currentPage * itemLen;
-	const firstPage = lastPage - itemLen;
-	const currentItems = boardData.slice(firstPage, lastPage);
+    for (let i = 1; i <= totalPages; i++) {
+        pageNum.push(i);
+    }
 
-	const totalPages = Math.ceil(boardData.length / itemLen);
-	const pageNum = [];
-	for(let i = 1; i <= totalPages; i++){
-		pageNum.push(i);
-	}
+    const handleItemClick = (item) => {
+        setSelectedItem(item);
+        setDetailOpen(true);
+        setWriteOpen(false); // 글쓰기 창 닫기
+    };
 
-	const handlePageClick = (e, num) => {
-		e.preventDefault();
-		e.stopPropagation();
-		setCurrentPage(num);
-	}
+    const handleDetailClose = () => {
+        setDetailOpen(false);
+    };
 
-	return (
-		<div className='fixed inset-0 bg-gray-800 bg-opacity-75 flex flex-col items-center justify-center z-50'>
-			<form className='bg-white p-5 rounded shadow-lg w-3/4 relative'>
-				<div className='text-5xl my-8 text-center font-extrabold'>
-					<p>게시판</p>
-				</div>
-				<table className='w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden my-4'>
-					<button onClick={onClose} className='absolute top-11 right-12 text-black hover:text-gray-800 text-4xl font-bold'>X</button>
-					<thead className='bg-gray-200'>
-						<tr>
-							<th className='p-3 text-left text-sm font-semibold text-gray-700'>글번호</th>
-							<th className='p-3 text-left text-sm font-semibold text-gray-700'>제목</th>
-							<th className='p-3 text-left text-sm font-semibold text-gray-700'>닉네임</th>
-							<th className='p-3 text-left text-sm font-semibold text-gray-700'>게시한 날짜</th>
-							<th className='p-3 text-left text-sm font-semibold text-gray-700'>조회수</th>
-						</tr>
-					</thead>
-					<tbody>
-						{currentItems.map(item => (
-							<tr key={item.idx} className='odd:bg-gray-100 even:bg-white hover:bg-blue-50 transition-colors'>
-								<td className='p-3 text-sm text-gray-800'>{item.idx}</td>
-								<td className='p-3 text-sm text-gray-800'><Link to={`/board/${item.idx}`}>{item.title}</Link></td>
-								<td className='p-3 text-sm text-gray-800'>{item.username}</td>
-								<td className='p-3 text-sm text-gray-800'>{item.regidate_date}</td>
-								<td className='p-3 text-sm text-gray-800'>{item.visit_count}</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
-				<div className='flex justify-center mt-4'>
-						<button className='px-4 py-2 mx-2 border rounded hover:bg-gray-200'
-								onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-								disabled={currentPage === 1}
-						>
-						이전
-						</button>
+    const handleWriteClick = () => {
+        setWriteOpen(true);  // 글쓰기 창 열기
+        setDetailOpen(false); // 상세 페이지 닫기
+    };
 
-						{pageNum.map(num => (
-							<button key={num}
-									className={`px-4 py-2 mx-1 border rounded ${currentPage === num ? 'bg-blue-500 text-white' : 'hover:bg-gray-200'}`}
-									onClick={(e) => handlePageClick(e, num)}
-							>
-								{num}
-							</button>
-						))}
+    const handleWriteClose = () => {
+        setWriteOpen(false);  // 글쓰기 창 닫기
+    };
 
-						<button className='px-4 py-2 mx-2 border rounded hover:bg-gray-200'
-								onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-								disabled={currentPage === totalPages}
-						>
-							다음
-						</button>
-						<Outlet/>
-					</div>
-			</form>
-		</div>
+    const handleSubmit = (newPost) => {
+        setBoardData([newPost, ...boardData]); // 새 글을 앞에 추가
+        setWriteOpen(false); // 글쓰기 창 닫기
+    };
+
+    return (
+        <div className='fixed inset-0 bg-gray-800 bg-opacity-75 flex flex-col items-center justify-center z-30'>
+            <div className='bg-white p-5 rounded shadow-lg w-3/4 relative'>
+                <button onClick={onClose} className='absolute top-11 right-12 text-black hover:text-gray-800 text-4xl font-bold'>X</button>
+
+                {/* 글쓰기 페이지 */}
+                {writeOpen ? (
+                    <BoardWrite onSubmit={handleSubmit} onClose={handleWriteClose} />
+                ) : detailOpen && selectedItem ? (
+                    <div className="detail-container p-6 rounded-lg bg-gray-100 shadow-md">
+                        <h2 className="text-2xl font-bold text-blue-700 mb-4">{selectedItem.title}</h2>
+                        <div className="flex justify-between mb-4">
+                            <p className="text-sm text-gray-500">글번호: {selectedItem.idx}</p>
+                            <p className="text-sm text-gray-500">조회수: {selectedItem.visit_count}</p>
+                        </div>
+                        <p className="text-md text-gray-700 mb-6"><strong>작성자:</strong> {selectedItem.username}</p>
+                        <p className="text-md text-gray-700 mb-6"><strong>작성일:</strong> {new Date(selectedItem.regidate_date).toLocaleString()}</p>
+                        <p className="text-md text-gray-800 mb-6"><strong>내용:</strong> {selectedItem.content}</p>
+                        <button onClick={handleDetailClose} className='mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'>
+                            닫기
+                        </button>
+                    </div>
+                ) : (
+                    <div>
+                        <h2 className="text-5xl my-8 text-center font-extrabold">게시판</h2>
+                        <button onClick={handleWriteClick} className='mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600'>글쓰기</button>
+                        <table className='w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden my-4'>
+                            <thead className='bg-gray-200'>
+                                <tr>
+                                    <th className='p-3 text-left text-sm font-semibold text-gray-700'>글번호</th>
+                                    <th className='p-3 text-left text-sm font-semibold text-gray-700'>제목</th>
+                                    <th className='p-3 text-left text-sm font-semibold text-gray-700'>닉네임</th>
+                                    <th className='p-3 text-left text-sm font-semibold text-gray-700'>게시한 날짜</th>
+                                    <th className='p-3 text-left text-sm font-semibold text-gray-700'>조회수</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentItems.length > 0 ? (
+                                    currentItems.map(item => (
+                                        <tr key={item.idx} className='odd:bg-gray-100 even:bg-white hover:bg-blue-50 transition-colors'
+                                            onClick={() => handleItemClick(item)}>
+                                            <td className='p-3 text-sm text-gray-800'>{item.idx}</td>
+                                            <td className='p-3 text-sm text-gray-800'>{item.title}</td>
+                                            <td className='p-3 text-sm text-gray-800'>{item.username}</td>
+                                            <td className='p-3 text-sm text-gray-800'>{new Date(item.regidate_date).toLocaleDateString()}</td>
+                                            <td className='p-3 text-sm text-gray-800'>{item.visit_count}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={5} className='p-3 text-center text-sm text-gray-800'>데이터가 없습니다.</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                        <div className='flex justify-center mt-4'>
+                            <button className='px-4 py-2 mx-2 border rounded hover:bg-gray-200'
+                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                disabled={currentPage === 1}>
+                                이전
+                            </button>
+                            {pageNum.map(num => (
+                                <button key={num}
+                                    className={`px-4 py-2 mx-1 border rounded ${currentPage === num ? 'bg-blue-500 text-white' : 'hover:bg-gray-200'}`}
+                                    onClick={() => setCurrentPage(num)}>
+                                    {num}
+                                </button>
+                            ))}
+                            <button className='px-4 py-2 mx-2 border rounded hover:bg-gray-200'
+                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                disabled={currentPage === totalPages}>
+                                다음
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
 	)
 }
 
