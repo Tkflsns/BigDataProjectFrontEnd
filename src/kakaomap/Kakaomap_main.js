@@ -5,12 +5,13 @@ import jsonData from './jsonData';
 import MarkerFilter from './MarkerFilter';
 import SetMarker from './SetMarker';
 import SideBarMain from './SideBarMain';
+import SearchKeyWord from './SearchKeyWord';
 
 export default function Kakaomap_main() {
 	const [map, setMap] = useState(null);
-	const [swNePosition, setSwNePosition] = useState();
-	const [Sm, setSm] = useState();
-	const [chart, setChart] = useState();
+	const [swNePosition, setSwNePosition] = useState(null);
+	const [Sm, setSm] = useState(null);
+	const [searchKeyPage, setSearchKeyPage] = useState(null);
 	const [innerHeight, setInnerHeight] = useState(window.innerHeight);
 	const [markerdata, setMarkerdata] = useState([]);
 	const [parkingTm, setParkingTm] = useState([]);
@@ -29,6 +30,7 @@ export default function Kakaomap_main() {
 		window.addEventListener("resize", resizeListener);
 		const script = document.createElement('script');
 		script.onload = () => {
+			console.log('Kakao Maps API 로드 완료');
 			kakao.maps.load(() => {
 				const container = mapRef.current;
 				const options = {
@@ -37,6 +39,7 @@ export default function Kakaomap_main() {
 				};
 				const newMap = new kakao.maps.Map(container, options);
 				setMap(newMap);
+				console.log('Map 객체 생성 완료', newMap);
 			});
 		};
 
@@ -57,6 +60,7 @@ export default function Kakaomap_main() {
 		MyPosition(map);
 		getbound();
 
+		setSearchKeyPage(() => <SearchKeyWord map={map} />);
 		kakao.maps.event.addListener(map, 'tilesloaded', () => { getbound() });
 
 	}, [map]);
@@ -65,43 +69,7 @@ export default function Kakaomap_main() {
 		if (!markerdata || markerdata.length === 0) return;
 		setSm(() => <SideBarMain className="w-auto h-auto" Data={markerdata} parking={parking} classroom={classroom} cultural={cultural} sports={sports} />);
 		console.log("marker : ", markerdata);
-		// const chart = MarkerFilter({ markerdata, setParkingTm, setClassroomTm, setCulturalTm, setSportsTm });
-		// setChart(chart);
 	}, [markerdata])
-
-	useEffect(() => {
-		if (!parkingTm || parkingTm.length === 0) return;
-		const tm = parkingTm;
-		const markerImgSrc = './img/parking.png';
-
-		// console.log("tm : ", tm);
-
-		SetMarker({ tm, markerImgSrc, map });
-	}, [parkingTm]);
-
-	useEffect(() => {
-		// console.log("classroomTm : ", classroomTm);
-		if (!classroomTm || classroomTm.length === 0) return;
-		const tm = classroomTm;
-		const markerImgSrc = './img/classroom.png';
-		SetMarker({ tm, markerImgSrc, map });
-	}, [classroomTm]);
-
-	useEffect(() => {
-		// console.log("culturalTm : ", culturalTm);
-		if (!culturalTm || culturalTm.length === 0) return;
-		const markerImgSrc = './img/cultural.png';
-		const tm = culturalTm;
-		SetMarker({ tm, markerImgSrc, map });
-	}, [culturalTm]);
-
-	useEffect(() => {
-		// console.log("sportsTm : ", sportsTm);
-		if (!sportsTm || sportsTm.length === 0) return;
-		const markerImgSrc = './img/sports.png';
-		const tm = sportsTm;
-		SetMarker({ tm, markerImgSrc, map });
-	}, [sportsTm]);
 
 	const resizeListener = () => {
 		setInnerHeight(window.innerHeight);
@@ -118,7 +86,7 @@ export default function Kakaomap_main() {
 		const pa = neLatLng.getLng(); // 북동쪽 경도
 
 		setSwNePosition({ ha, qa, oa, pa });
-		// console.log("bounds : ", bounds);
+
 		// parking:주차장, classroom:강의실,회의실, cultural:문화,숙박, sports:체육시설
 		// ha:남서쪽위도swLat, qa:남서쪽경도swLng, oa:북동쪽위도neLat, pa:북동쪽경도neLng
 		const data = { parking, classroom, cultural, sports, ha, pa, oa, qa };
@@ -131,11 +99,18 @@ export default function Kakaomap_main() {
 			<div className='absolute z-20 h-64'>
 				<MarkerFilter markerdata={markerdata} setParkingTm={setParkingTm} setClassroomTm={setClassroomTm} setCulturalTm={setCulturalTm} setSportsTm={setSportsTm} />
 			</div>
-			<div ref={mapRef} className='flex-grow' style={{ height: innerHeight - 73 }} >
-			</div>
+			<div ref={mapRef} className='flex-grow' style={{ height: innerHeight - 73 }} />
 			<div className='w-80' style={{ height: innerHeight - 73 }}>
 				{Sm}
 			</div>
+			<div className='absolute top-18 right-80 mr-1 w-85 h-10 z-20'>
+				{searchKeyPage}
+			</div>
+			{/* 컴포넌트 형태로 SetMarker를 사용 */}
+            {parkingTm.length > 0 && <SetMarker tm={parkingTm} markerImgSrc="./img/parking.png" map={map} />}
+            {classroomTm.length > 0 && <SetMarker tm={classroomTm} markerImgSrc="./img/classroom.png" map={map} />}
+            {culturalTm.length > 0 && <SetMarker tm={culturalTm} markerImgSrc="./img/cultural.png" map={map} />}
+            {sportsTm.length > 0 && <SetMarker tm={sportsTm} markerImgSrc="./img/sports.png" map={map} />}
 		</div>
 	)
 };

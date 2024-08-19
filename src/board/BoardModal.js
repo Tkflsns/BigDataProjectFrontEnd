@@ -6,6 +6,7 @@ const BoardModal = ({ isOpen, onClose }) => {
 	const [boardData, setBoardData] = useState([]);
 	const [detailOpen, setDetailOpen] = useState(false);
     const [writeOpen, setWriteOpen] = useState(false); // 글쓰기 페이지 열림/닫힘 상태
+    const [editOpen, setEditOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const itemLen = 10;
@@ -30,35 +31,65 @@ const BoardModal = ({ isOpen, onClose }) => {
 	};
 	useEffect(() => {
 		loadBoardData();
-	}, [writeOpen])
+	}, []);
 	
-
     for (let i = 1; i <= totalPages; i++) {
         pageNum.push(i);
-    }
+    };
 
     const handleItemClick = (item) => {
         setSelectedItem(item);
         setDetailOpen(true);
         setWriteOpen(false); // 글쓰기 창 닫기
+        setEditOpen(false);
     };
 
     const handleDetailClose = () => {
         setDetailOpen(false);
+        setSelectedItem(null);
     };
 
     const handleWriteClick = () => {
+        setSelectedItem(null);
         setWriteOpen(true);  // 글쓰기 창 열기
         setDetailOpen(false); // 상세 페이지 닫기
+        setEditOpen(false);
     };
 
     const handleWriteClose = () => {
         setWriteOpen(false);  // 글쓰기 창 닫기
     };
 
+    const handleEditClick = () => {
+        setEditOpen(true);
+        setDetailOpen(false);
+    };
+
+    const handleEditClose = () => {
+        setEditOpen(false);
+    };
+
+    const handleDelete = () => {
+        const updateBoardData = boardData.filter(item => item.idx !== selectedItem.idx);
+        setBoardData(updateBoardData);
+        setDetailOpen(false);
+        setSelectedItem(null);
+    }
+
     const handleSubmit = (newPost) => {
-        setBoardData([newPost, ...boardData]); // 새 글을 앞에 추가
-        setWriteOpen(false); // 글쓰기 창 닫기
+        console.log("newPost : ", newPost);
+        if (editOpen){
+            const updateBoardData = boardData.map(item =>
+                item.idx === newPost.idx ? newPost : item
+            );
+            setBoardData(updateBoardData);
+            setEditOpen(false);
+            setDetailOpen(true);
+        } else {
+            setBoardData([newPost, ...boardData]); // 새 글을 앞에 추가
+            setWriteOpen(false); // 글쓰기 창 닫기
+        };
+        setSelectedItem(newPost);
     };
 
     return (
@@ -67,8 +98,8 @@ const BoardModal = ({ isOpen, onClose }) => {
                 <button onClick={onClose} className='absolute top-11 right-12 text-black hover:text-gray-800 text-4xl font-bold'>X</button>
 
                 {/* 글쓰기 페이지 */}
-                {writeOpen ? (
-                    <BoardWrite onSubmit={handleSubmit} onClose={handleWriteClose} />
+                {writeOpen || editOpen ? (
+                    <BoardWrite onSubmit={handleSubmit} onClose={writeOpen ? handleWriteClose : handleEditClose} initialData={selectedItem || {}} />
                 ) : detailOpen && selectedItem ? (
                     <div className="detail-container p-6 rounded-lg bg-gray-100 shadow-md">
                         <h2 className="text-2xl font-bold text-blue-700 mb-4">{selectedItem.title}</h2>
@@ -79,9 +110,17 @@ const BoardModal = ({ isOpen, onClose }) => {
                         <p className="text-md text-gray-700 mb-6"><strong>작성자:</strong> {selectedItem.username}</p>
                         <p className="text-md text-gray-700 mb-6"><strong>작성일:</strong> {new Date(selectedItem.regidate_date).toLocaleString()}</p>
                         <p className="text-md text-gray-800 mb-6"><strong>내용:</strong> {selectedItem.content}</p>
-                        <button onClick={handleDetailClose} className='mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'>
-                            닫기
-                        </button>
+                        <div className='flex justify-end space-x-4'>
+                            <button onClick={handleEditClick} className='px-4 py-2 bg-yellow-500 rounded hover:bg-yellow-600'>
+                                수정하기
+                            </button>
+                            <button onClick={handleDelete} className='px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600'>
+                                삭제하기
+                            </button>
+                            <button onClick={handleDetailClose} className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'>
+                                닫기
+                            </button>
+                        </div>
                     </div>
                 ) : (
                     <div>

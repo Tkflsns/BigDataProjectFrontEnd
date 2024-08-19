@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
 
-const BoardWrite = ({ onSubmit, onClose }) => {
-    const [title, setTitle] = useState('');
-    const [username, setUsername] = useState('');
-    const [content, setContent] = useState('');
+const BoardWrite = ({ onSubmit, onClose, initialData }) => {
+    const [title, setTitle] = useState(initialData.title || '');
+    const [username, setUsername] = useState(initialData.username || '');
+    const [content, setContent] = useState(initialData.content || '');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const newPost = {
-            idx: Math.floor(Math.random() * 1000) + 1,  // 고유 idx 생성
+            ...initialData,
+            idx: initialData.idx || Math.floor(Math.random() * 1000) + 1,  // 고유 idx 생성
             title,
             username,
             content,
-            regidate_date: new Date().toISOString(),
-            visit_count: 0
+            regidate_date: initialData.regidate_date || new Date().toISOString(),
+            visit_count: initialData.visit_count || 0,
         };
         onSubmit(newPost);  // 부모 컴포넌트로 새 글 데이터 전달
     };
 
     return (
         <div className="write-container p-6 rounded-lg bg-gray-100 shadow-md">
-            <h2 className="text-2xl font-bold text-blue-700 mb-4">글 작성</h2>
+            <h2 className="text-2xl font-bold text-blue-700 mb-4">{initialData.idx ? "글 수정" : "글 작성"}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-700">제목</label>
@@ -39,7 +40,7 @@ const BoardWrite = ({ onSubmit, onClose }) => {
                 </div>
                 <div className="flex justify-between">
                     <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                        게시하기
+                        {initialData.idx ? "수정하기" : "게시하기"}
                     </button>
                     <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
                         취소

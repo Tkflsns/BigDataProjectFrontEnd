@@ -1,11 +1,10 @@
 import ReactDOMServer from 'react-dom/server';
+import { useRef } from 'react';
 
 export default function Setmarker({ tm, markerImgSrc, map }) {
-    if (!tm || tm.length === 0) return;
+    const overlayRefs = useRef([]); // 오버레이 객체들을 저장하는 배열
 
-    // console.log("SMtm : ", tm);
-    // console.log("img : ", markerImgSrc);
-    // console.log("map : ", map);
+    if (!tm || tm.length === 0) return;
 
     const createMarkerImage = (src, size, option) => {
         return new kakao.maps.MarkerImage(src, size, option);
@@ -24,7 +23,9 @@ export default function Setmarker({ tm, markerImgSrc, map }) {
                           bg-white text-sm leading-relaxed w-auto h-auto">
                 <div className="flex justify-between w-auto py-2 px-3 h-auto bg-gray-200 border-b border-gray-300 text-lg font-bold break-all">
                     <div className='w-auto h-auto'>{item.rsrcNm}&nbsp;&nbsp;</div>
-                    {/* <button id="close-overlay-${index}" className='text-gray-500 hover:text-gray-800 close-overlay'>X</button> */}
+                    <button id={`close-overlay-${index}`} className='text-gray-500 hover:text-gray-800 close-overlay'>
+                        X
+                    </button>
                 </div>
                 <div className="flex">
                     <div className="flex items-center w-20 h-auto m-1">
@@ -42,11 +43,13 @@ export default function Setmarker({ tm, markerImgSrc, map }) {
                 </div>
             </div>
         );
+
         let imageSize = new kakao.maps.Size(40, 50);
         let imageOption = { offset: new kakao.maps.Point(18, 46) };
         let markerImage = createMarkerImage(markerImgSrc, imageSize, imageOption);
         let position = new kakao.maps.LatLng(item.lat, item.lot);
         let marker = createMarker(position, markerImage);
+
         let overlay = new kakao.maps.CustomOverlay({
             content: content,
             clickable: true,
@@ -55,25 +58,32 @@ export default function Setmarker({ tm, markerImgSrc, map }) {
             position: marker.getPosition()
         });
 
-        let infowindow = new kakao.maps.InfoWindow({
-            content: `<div>${item.rsrcNm}</div>`
-        });
+        // 오버레이를 배열에 저장
+        overlayRefs.current.push(overlay);
 
-        // function closeOverlay() {
-        //     overlay.setMap(null);
-        // }
+        let infowindow = new kakao.maps.InfoWindow({
+            content: `<div> ${item.rsrcNm} </div>`
+        });
 
         kakao.maps.event.addListener(marker, 'mouseover', () => infowindow.open(map, marker));
         kakao.maps.event.addListener(marker, 'mouseout', () => infowindow.close());
+        kakao.maps.event.addListener(map, 'tilesloaded', () => overlay.setMap(null));
         kakao.maps.event.addListener(marker, 'click', () => {
+            // 기존에 열려있는 모든 오버레이를 닫음
+            // overlayRefs.current.forEach((ovr) => ovr.setMap(null));
+
+            // 해당 마커의 오버레이만 열기
             overlay.setMap(map);
-            // document.getElementById(`close-overlay-${index}`).addEventListener('click', () => overlay.setMap(null));
-         });
-        kakao.maps.event.addListener(map, 'tilesloaded', () => { 
-                                                        overlay.setMap(null) 
         });
 
-        marker.setMap(map)
+        // 오버레이 내의 닫기 버튼에 클릭 이벤트 추가
+        document.addEventListener('click', (e) => {
+            if (e.target.id === `close-overlay-${index}`) {
+                overlay.setMap(null); // 오버레이 닫기
+            }
+        });
+
+        marker.setMap(map);
     });
 
 };

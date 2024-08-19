@@ -62,7 +62,7 @@ export default function SearchPage() {
 			<button 
 				className='text-xl cursor-pointer text-black border bg-sky-300 bg-opacity-25 hover:bg-sky-500 hover:bg-opacity-50 hover:text-white font-extrabold font w-1/3 h-20 p-1 ml-2 rounded mt-6'
 				onClick={handleClick}>
-				검색
+				지도보기
 			</button>
 		</div>
 	</div>
