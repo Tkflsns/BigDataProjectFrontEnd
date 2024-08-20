@@ -35,35 +35,34 @@ export default function SearchPage() {
 			backgroundSize: 'cover',
 			backgroundPosition: 'center'
 		}}>
-		<div className='flex flex-col items-center justify-between h-1/3 w-1/2 rounded-lg bg-opacity-40 bg-gray-300 border-4 border-white p-4'>
-			<h1 className='font-medium text-5xl mb-6'>공공개방시설 검색</h1>
-			<div className='flex justify-evenly w-full'>
+		<div className='font-["Danjo"] flex flex-col items-center justify-between h-auto w-3/4 max-w-5xl rounded-lg bg-opacity-50 bg-gray-800 shadow-xl border-4 border-gray-100 p-6'>
+			<h1 className='font-bold text-5xl mb-8 text-white'>공공개방시설 검색</h1>
+			<div className='font-bold text-5xl mb-8 text-white'>
 				<button 
-					className={`text-3xl border-4 cursor-pointer rounded-lg p-4 ${parking ? 'bg-green-400 text-white' : 'bg-transparent bg-gray-500 bg-opacity-30 text-black'} transition-colors duration-300 select-none font-semibold`}
+					className={`text-2xl border-4 cursor-pointer rounded-lg py-6 px-4 transition-colors duration-300 font-semibold ${parking ? 'bg-green-500 text-white border-green-600' : 'bg-transparent text-white bg-opacity-30 border-gray-400'} transition-colors duration-300 select-none font-semibold`}
 					onClick={() => setParking(!parking)}>
 					주차장
 				</button>
 				<button 
-					className={`text-3xl border-4 cursor-pointer rounded-lg p-4 ${classroom ? 'bg-indigo-400 text-white' : 'bg-transparent bg-gray-500 bg-opacity-30 text-black'} transition-colors duration-300 select-none font-semibold`}
+					className={`text-2xl border-4 cursor-pointer rounded-lg py-6 px-4 transition-colors duration-300 font-semibold ${classroom ? 'bg-indigo-500 text-white border-indigo-600' : 'bg-transparent text-white bg-opacity-30 border-gray-400'} transition-colors duration-300 select-none font-semibold`}
 					onClick={() => setClassroom(!classroom)}>
 					강의실, 회의실
 				</button>
 				<button 
-					className={`text-3xl border-4 cursor-pointer rounded-lg p-4 ${cultural ? 'bg-amber-400 text-white' : 'bg-transparent bg-gray-500 bg-opacity-30 text-black'} transition-colors duration-300 select-none font-semibold`}
+					className={`text-2xl border-4 cursor-pointer rounded-lg py-6 px-4 transition-colors duration-300 font-semibold ${cultural ? 'bg-amber-500 text-white border-amber-600' : 'bg-transparent text-white bg-opacity-30 border-gray-400'} transition-colors duration-300 select-none font-semibold`}
 					onClick={() => setCultural(!cultural)}>
 					문화, 숙박
 				</button>
 				<button 
-					className={`text-3xl border-4 cursor-pointer rounded-lg p-4 ${sports ? 'bg-rose-400 text-white' : 'bg-transparent bg-gray-500 bg-opacity-30 text-black'} transition-colors duration-300 select-none font-semibold`}
+					className={`text-2xl border-4 cursor-pointer rounded-lg py-6 px-4 transition-colors duration-300 font-semibold ${sports ? 'bg-rose-500 text-white border-rose-600' : 'bg-transparent text-white bg-opacity-30 border-gray-400'}`}
 					onClick={() => setSports(!sports)}>
 					체육시설
 				</button>
 			</div>
-			<button 
-				className='text-xl cursor-pointer text-black border bg-sky-300 bg-opacity-25 hover:bg-sky-500 hover:bg-opacity-50 hover:text-white font-extrabold font w-1/3 h-20 p-1 ml-2 rounded mt-6'
+			<img src='./img/ViewMap.png'
+				className='text-2xl cursor-pointer shadow-2xl w-28 h-28 border-4 border-white rounded-2xl'
 				onClick={handleClick}>
-				지도보기
-			</button>
+			</img>
 		</div>
 	</div>
 	)

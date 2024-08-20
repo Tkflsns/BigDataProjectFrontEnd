@@ -3,9 +3,21 @@ import './App.css';
 import SearchPage from './mainpage/SearchPage';
 import Kakaomap_main from './kakaomap/Kakaomap_main';
 import NavBar from './mainpage/NavBar';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from './login/LoginSlice';
 
 
 function App() {
+	// const dispatch = useDispatch();
+
+	// useEffect(() => {
+    //     const token = localStorage.getItem('accessToken');
+    //     if(token){
+    //         const user = localStorage.getItem('userId');
+    //         dispatch(loginSuccess({user, token}));
+    //     }
+    // }, [dispatch]);
 
 	return (
 		<BrowserRouter>

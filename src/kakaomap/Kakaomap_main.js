@@ -29,6 +29,7 @@ export default function Kakaomap_main() {
 	useEffect(() => {
 		window.addEventListener("resize", resizeListener);
 		const script = document.createElement('script');
+		script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_API_KEY}&libraries=services&autoload=false`;
 		script.onload = () => {
 			console.log('Kakao Maps API 로드 완료');
 			kakao.maps.load(() => {
@@ -42,8 +43,6 @@ export default function Kakaomap_main() {
 				console.log('Map 객체 생성 완료', newMap);
 			});
 		};
-
-		script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_API_KEY}&autoload=false`;
 
 		document.head.appendChild(script);
 
@@ -95,7 +94,7 @@ export default function Kakaomap_main() {
 	};
 
 	return (
-		<div className='w-full flex'>
+		<div className='font-["GoYang"] w-full flex'>
 			<div className='absolute z-20 h-64'>
 				<MarkerFilter markerdata={markerdata} setParkingTm={setParkingTm} setClassroomTm={setClassroomTm} setCulturalTm={setCulturalTm} setSportsTm={setSportsTm} />
 			</div>

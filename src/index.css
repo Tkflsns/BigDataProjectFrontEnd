@@ -15,3 +15,28 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: 'Danjo';
+  src: url('./fonts/Danjo-bold-Regular.otf');
+}
+
+@font-face {
+  font-family: 'HanEumB';
+  src: url('./fonts/OSeongandHanEum-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'GoYang';
+  src: url('./fonts/GoYang.TTF');
+}
+
+@font-face {
+  font-family: 'NanumGodic';
+  src: url('./fonts/NanumGothic.ttf');
+}
+
+@font-face {
+  font-family: 'NanumBrush';
+  src: url('./fonts/NanumBrush.ttf');
+}

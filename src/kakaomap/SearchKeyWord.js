@@ -11,19 +11,17 @@ const SearchKeyWord = ({map}) => {
 
 		const ps = new kakao.maps.services.Places();
 
-		if (!keyword) {
+		if (!keyWordRef.current.value) {
             console.warn('검색어를 입력하세요.');
             return;
         }
 
-		ps.keywordSearch(keyWordRef.current.value, placesSearchDB);
-
 		const placesSearchDB = (data, status, pagination) => {
-			if (status === window.kakao.maps.services.Status.OK){
-				const bounds = new window.kakao.maps.LatLngBounds();
+			if (status === kakao.maps.services.Status.OK){
+				const bounds = new kakao.maps.LatLngBounds();
 
 				data.forEach((place) => {
-					const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
+					const placePosition = new kakao.maps.LatLng(place.y, place.x);
 					bounds.extend(placePosition);
 				})
 
@@ -32,10 +30,12 @@ const SearchKeyWord = ({map}) => {
 				console.warn('검색된 결과가 없습니다.');
 			}
 		}
+
+		ps.keywordSearch(keyWordRef.current.value, placesSearchDB);
 	}
 
 	return (
-		<div className='w-full h-full flex items-center justify-center bg-blue-200 rounded-2xl'>
+		<div className='w-full h-full flex items-center justify-center bg-blue-100 rounded-2xl'>
 			<span className='text-xl mx-3 font-bold'>장소검색 : </span>
 			<input ref={keyWordRef} type='text' className='border-2 border-black rounded'/>
 			<button onClick={handleSearchClick} className='p-1 mx-3 bg-blue-500 text-white rounded hover:bg-blue-600'>검색</button>

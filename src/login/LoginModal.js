@@ -1,42 +1,46 @@
 import axios from 'axios';
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from './LoginSlice';
 
 const LoginModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
 
     const refId = useRef(null);
     const refPass = useRef(null);
+    const dispatch = useDispatch();
 
     const handleLoginClick = async () => {
         const data1 = {
             username: refId.current.value,
             password: refPass.current.value,
         };
-        const data2 = {
-            email: refId.current.value,
-            password: refPass.current.value,
-        };
 
-        console.log("logindata : ", data2);
+        console.log("logindata : ", data1);
         try{
-        const response = await axios.post(/*'http://10.125.121.183:8090/login'*/'https://reqres.in/api/login', data2/*, {withCredentials: true}*/);
-        
-        console.log("token : ", response.headers.token);
+        const response = await axios.post('http://10.125.121.183:8010/login', data1);
 
-        localStorage.setItem("accessToken", response.headers["authorization"]);
+        const token = response.data.token;
+        const user = refId.current.value;
+
+        dispatch(loginSuccess({user, token}));
+        localStorage.setItem("accessToken", response.data.token);
+        localStorage.setItem("userId", user);
+
+        console.log("Token : ", localStorage.getItem("accessToken"));
         
         onClose();
         }catch(error){
             console.error("로그인 실패 : ", error);
+            alert("로그인 실패");
         }
         
     }
     return (
-        <div className='fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50'>
+        <nav className='fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 '>
             <div
-                className='bg-white p-5 rounded shadow-lg w-96 relative'>
-                <button onClick={onClose}
-                        className='absolute top-2 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold'>X</button>
+                className='bg-white p-5 rounded shadow-lg w-96 relative bg-gradient-to-t from-white to-blue-50'>
+                <img src='./img/Exit.png' onClick={onClose} className='absolute top-2 right-2 w-7 h-7 border-2 border-black rounded-md cursor-pointer'></img>
                 <div className='mb-4 flex justify-center items-center'><h2 className='text-2xl font-bold'>로그인</h2></div>
                 <div className='grid grid-cols-2 gap-2 mr-10 mb-4'>
                     <span className='text-right pr-3 font-bold'>ID : </span>
@@ -68,7 +72,7 @@ const LoginModal = ({ isOpen, onClose }) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </nav>
     );
 };
 

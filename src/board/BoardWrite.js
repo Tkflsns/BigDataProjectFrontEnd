@@ -20,7 +20,7 @@ const BoardWrite = ({ onSubmit, onClose, initialData }) => {
     };
 
     return (
-        <div className="write-container p-6 rounded-lg bg-gray-100 shadow-md">
+        <div className="write-container p-6 rounded-lg bg-gray-100 shadow-md font-['NanumGodic']">
             <h2 className="text-2xl font-bold text-blue-700 mb-4">{initialData.idx ? "글 수정" : "글 작성"}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import BoardWrite from './BoardWrite';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 const BoardModal = ({ isOpen, onClose }) => {
 	const [boardData, setBoardData] = useState([]);
@@ -20,6 +21,8 @@ const BoardModal = ({ isOpen, onClose }) => {
 
     const pageNum = [];
 
+    const loginAuth = useSelector((state) => state.login.isAuthenticated);
+
 	const loadBoardData = async () => {
 		try {
 			const resp = await axios.get('https://raw.githubusercontent.com/Tkflsns/BigDataProjectFrontEnd/main/src/board/boardData.json');
@@ -29,6 +32,7 @@ const BoardModal = ({ isOpen, onClose }) => {
 			console.error("보드데이터 불러오기 실패", error);
 		}
 	};
+
 	useEffect(() => {
 		loadBoardData();
 	}, []);
@@ -50,6 +54,10 @@ const BoardModal = ({ isOpen, onClose }) => {
     };
 
     const handleWriteClick = () => {
+        if (!loginAuth) {
+            alert("로그인후 글쓰기가 가능합니다.");
+            return;
+        }
         setSelectedItem(null);
         setWriteOpen(true);  // 글쓰기 창 열기
         setDetailOpen(false); // 상세 페이지 닫기
@@ -61,6 +69,10 @@ const BoardModal = ({ isOpen, onClose }) => {
     };
 
     const handleEditClick = () => {
+        if (!loginAuth) {
+            alert("로그인후 글수정이 가능합니다.");
+            return;
+        }
         setEditOpen(true);
         setDetailOpen(false);
     };
@@ -70,6 +82,10 @@ const BoardModal = ({ isOpen, onClose }) => {
     };
 
     const handleDelete = () => {
+        if (!loginAuth) {
+            alert("로그인후 글삭제가 가능합니다.");
+            return;
+        }
         const updateBoardData = boardData.filter(item => item.idx !== selectedItem.idx);
         setBoardData(updateBoardData);
         setDetailOpen(false);
@@ -93,9 +109,9 @@ const BoardModal = ({ isOpen, onClose }) => {
     };
 
     return (
-        <div className='fixed inset-0 bg-gray-800 bg-opacity-75 flex flex-col items-center justify-center z-30'>
-            <div className='bg-white p-5 rounded shadow-lg w-3/4 relative'>
-                <button onClick={onClose} className='absolute top-11 right-12 text-black hover:text-gray-800 text-4xl font-bold'>X</button>
+        <div className='fixed inset-0 bg-gray-800 bg-opacity-75 flex flex-col items-center justify-center z-30 font-["NanumGodic"]'>
+            <div className='bg-white p-5 rounded-md shadow-lg w-3/4 relative bg-gradient-to-t from-white to-blue-50'>
+            <img src='./img/Exit.png' onClick={onClose} className='absolute top-5 right-5 w-7 h-7 border-2 border-black rounded-md cursor-pointer'></img>
 
                 {/* 글쓰기 페이지 */}
                 {writeOpen || editOpen ? (
@@ -124,7 +140,7 @@ const BoardModal = ({ isOpen, onClose }) => {
                     </div>
                 ) : (
                     <div>
-                        <h2 className="text-5xl my-8 text-center font-extrabold">게시판</h2>
+                        <h2 className="text-5xl my-8 text-center font-extrabold font-['DanJo']">게 시 판</h2>
                         <button onClick={handleWriteClick} className='mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600'>글쓰기</button>
                         <table className='w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden my-4'>
                             <thead className='bg-gray-200'>
@@ -136,7 +152,7 @@ const BoardModal = ({ isOpen, onClose }) => {
                                     <th className='p-3 text-left text-sm font-semibold text-gray-700'>조회수</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className='cursor-pointer'>
                                 {currentItems.length > 0 ? (
                                     currentItems.map(item => (
                                         <tr key={item.idx} className='odd:bg-gray-100 even:bg-white hover:bg-blue-50 transition-colors'
