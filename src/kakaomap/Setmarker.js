@@ -62,7 +62,7 @@ export default function Setmarker({ tm, markerImgSrc, map }) {
         overlayRefs.current.push(overlay);
 
         let infowindow = new kakao.maps.InfoWindow({
-            content: `<div> ${item.rsrcNm} </div>`
+            content: `<div style="width: 15rem; text-align:center;"> ${item.rsrcNm} </div>`
         });
 
         kakao.maps.event.addListener(marker, 'mouseover', () => infowindow.open(map, marker));

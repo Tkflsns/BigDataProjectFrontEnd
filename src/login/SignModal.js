@@ -31,7 +31,7 @@ const SignModal = ({ isOpen, onClose }) => {
 	return (
 		<div className='fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50'>
 			<div className='bg-white p-5 rounded shadow-lg w-96 relative'>
-			<img src='./img/Exit.png' onClick={onClose} className='absolute top-2 right-2 w-7 h-7 border-2 border-black rounded-md cursor-pointer'></img>
+			<img src='./img/Exit.png' onClick={onClose} className='absolute top-4 right-4 w-7 h-7 cursor-pointer'></img>
 				<div className='mb-4 flex justify-center items-center'><h2 className='text-2xl font-bold'>회원가입</h2></div>
 				<div className='grid grid-cols-2 gap-2 mr-10 mb-4'>
 					<span className='text-right pr-3 font-bold'>ID : </span>
@@ -39,7 +39,7 @@ const SignModal = ({ isOpen, onClose }) => {
 					<span className='text-right pr-3 font-bold'>Password : </span>
 					<input ref={refPass} type='password' className='border-2 border-stone-800 rounded-md' />
 					<span className='text-right pr-3 font-bold'>Nickname : </span>
-					<input ref={refNick} type='password' className='border-2 border-stone-800 rounded-md' />
+					<input ref={refNick} type='text' className='border-2 border-stone-800 rounded-md' />
 				</div>
 				<div className='flex flex-col justify-center items-center'>
 					<button onClick={handleSignClick} className='bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 w-1/2 mx-1'>가입하기</button>

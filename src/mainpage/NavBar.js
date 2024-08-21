@@ -4,15 +4,18 @@ import SignModal from '../login/SignModal';
 import BoardModal from '../board/BoardModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutSuccess } from '../login/LoginSlice';
+import IntroModal from './IntroModal';
 
 export default function NavBar() {
 
 	const [boardOpen, setBoardOpen] = useState(false);
 	const [loginOpen, setLoginOpen] = useState(false);
 	const [signOpen, setSignOpen] = useState(false);
+	const [introOpen, setIntroOpen] = useState(false);
 
 	const dispatch = useDispatch();
 	const loginAuth = useSelector(state => state.login.isAuthenticated);
+	const loginNick = useSelector(state => state.login.nick);
 
 	useEffect(() => {
 		console.log("loginAuth : ", loginAuth);
@@ -22,6 +25,10 @@ export default function NavBar() {
 		if(!loginAuth) return;
 
 		dispatch(logoutSuccess());
+		localStorage.removeItem('accessToken');
+		localStorage.removeItem('userId');
+		localStorage.removeItem('nick');
+		localStorage.removeItem('role');
 	}
 
 	return (
@@ -35,20 +42,21 @@ export default function NavBar() {
 						<ul className="flex space-x-20 mx-20">
 							<li><a href="/" className="text-gray-700 hover:text-blue-600 transition duration-200 font-bold text-xl">시설검색</a></li>
 							<li><a onClick={() => setBoardOpen(true)} className="cursor-pointer text-gray-700 hover:text-blue-600 transition duration-200 font-bold text-xl">게시판</a></li>
-							<li><a href="/" className="text-gray-700 hover:text-blue-600 transition duration-200 font-bold text-xl">소개</a></li>
+							<li><a onClick={() => setIntroOpen(true)} className="cursor-pointer text-gray-700 hover:text-blue-600 transition duration-200 font-bold text-xl">소개</a></li>
 						</ul>
-						<div className="flex items-center space-x-4 mx-5 ml-72">
+						<div className="flex items-center space-x-4 mx-5 pl-52">
 							<button type="button"
 								className="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-200 px-4 py-2 rounded"
 								onClick={loginAuth ? handleLogout : () => setLoginOpen(true)}>{loginAuth ? '로그아웃' : '로그인'}</button>
-							{!loginAuth && <button type="button" className="bg-blue-500 text-white hover:bg-blue-700 transition-colors duration-200 px-4 py-2 rounded"
-								onClick={() => setSignOpen(true)}>회원가입</button>}
+							{!loginAuth ? <button type="button" className="bg-blue-500 text-white hover:bg-blue-700 transition-colors duration-200 px-4 py-2 rounded"
+								onClick={() => setSignOpen(true)}>회원가입</button> : <span>{loginNick}님 로그인</span>}
 						</div>
 				</div>
 			</div>
 			{loginOpen && <LoginModal isOpen={loginOpen} onClose={() => setLoginOpen(false)} />}
 			{boardOpen && <BoardModal isOpen={boardOpen} onClose={() => setBoardOpen(false)} />}
 			{signOpen && <SignModal isOpen={signOpen} onClose={() => setSignOpen(false)} />}
+			{introOpen && <IntroModal isOpen={introOpen} onClose={() => setIntroOpen(false)} />}
 		</>
 	)
 }

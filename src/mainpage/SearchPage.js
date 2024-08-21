@@ -39,22 +39,22 @@ export default function SearchPage() {
 			<h1 className='font-bold text-5xl mb-8 text-white'>공공개방시설 검색</h1>
 			<div className='font-bold text-5xl mb-8 text-white'>
 				<button 
-					className={`text-2xl border-4 cursor-pointer rounded-lg py-6 px-4 transition-colors duration-300 font-semibold ${parking ? 'bg-green-500 text-white border-green-600' : 'bg-transparent text-white bg-opacity-30 border-gray-400'} transition-colors duration-300 select-none font-semibold`}
+					className={`mx-2 text-2xl border-4 cursor-pointer rounded-lg py-6 px-4 transition-colors duration-300 font-semibold ${parking ? 'bg-green-500 text-white border-green-600' : 'bg-transparent text-white bg-opacity-30 border-gray-400'} transition-colors duration-300 select-none font-semibold`}
 					onClick={() => setParking(!parking)}>
 					주차장
 				</button>
 				<button 
-					className={`text-2xl border-4 cursor-pointer rounded-lg py-6 px-4 transition-colors duration-300 font-semibold ${classroom ? 'bg-indigo-500 text-white border-indigo-600' : 'bg-transparent text-white bg-opacity-30 border-gray-400'} transition-colors duration-300 select-none font-semibold`}
+					className={`mx-2 text-2xl border-4 cursor-pointer rounded-lg py-6 px-4 transition-colors duration-300 font-semibold ${classroom ? 'bg-indigo-500 text-white border-indigo-600' : 'bg-transparent text-white bg-opacity-30 border-gray-400'} transition-colors duration-300 select-none font-semibold`}
 					onClick={() => setClassroom(!classroom)}>
 					강의실, 회의실
 				</button>
 				<button 
-					className={`text-2xl border-4 cursor-pointer rounded-lg py-6 px-4 transition-colors duration-300 font-semibold ${cultural ? 'bg-amber-500 text-white border-amber-600' : 'bg-transparent text-white bg-opacity-30 border-gray-400'} transition-colors duration-300 select-none font-semibold`}
+					className={`mx-2 text-2xl border-4 cursor-pointer rounded-lg py-6 px-4 transition-colors duration-300 font-semibold ${cultural ? 'bg-amber-500 text-white border-amber-600' : 'bg-transparent text-white bg-opacity-30 border-gray-400'} transition-colors duration-300 select-none font-semibold`}
 					onClick={() => setCultural(!cultural)}>
 					문화, 숙박
 				</button>
 				<button 
-					className={`text-2xl border-4 cursor-pointer rounded-lg py-6 px-4 transition-colors duration-300 font-semibold ${sports ? 'bg-rose-500 text-white border-rose-600' : 'bg-transparent text-white bg-opacity-30 border-gray-400'}`}
+					className={`mx-2 text-2xl border-4 cursor-pointer rounded-lg py-6 px-4 transition-colors duration-300 font-semibold ${sports ? 'bg-rose-500 text-white border-rose-600' : 'bg-transparent text-white bg-opacity-30 border-gray-400'}`}
 					onClick={() => setSports(!sports)}>
 					체육시설
 				</button>

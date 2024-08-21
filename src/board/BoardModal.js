@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import BoardWrite from './BoardWrite';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import { format, parseISO } from 'date-fns';
 
 const BoardModal = ({ isOpen, onClose }) => {
 	const [boardData, setBoardData] = useState([]);
@@ -10,6 +11,7 @@ const BoardModal = ({ isOpen, onClose }) => {
     const [editOpen, setEditOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchKey, setSearchKey] =useState(null);
     const itemLen = 10;
 
     if (!isOpen) return null;
@@ -22,27 +24,91 @@ const BoardModal = ({ isOpen, onClose }) => {
     const pageNum = [];
 
     const loginAuth = useSelector((state) => state.login.isAuthenticated);
+    const loginUser = useSelector((state) => state.login.user);
+    const loginNick = useSelector((state) => state.login.nick);
+    const loginRole = useSelector((state) => state.login.role);
 
 	const loadBoardData = async () => {
 		try {
-			const resp = await axios.get('https://raw.githubusercontent.com/Tkflsns/BigDataProjectFrontEnd/main/src/board/boardData.json');
-			setBoardData(resp.data.board);
-			console.log("Board Data: ", resp.data.board);
+			const resp = await axios.get('http://10.125.121.183:8080/board/bring');
+            console.log(resp.data);
+			setBoardData(resp.data.slice().reverse());
 		} catch (error) {
 			console.error("보드데이터 불러오기 실패", error);
 		}
 	};
 
+    const boardDel = async () => {
+        try {
+            console.log(selectedItem);
+			const resp = await axios.post(`http://10.125.121.183:8080/board/delete`, selectedItem);
+            setSelectedItem(null);
+            loadBoardData();
+			console.log("Board Del: ", resp.data);
+		} catch (error) {
+			console.error("보드데이터 삭제하기 실패", error);
+		}
+    };
+
+    const boardWrite = async (newPost) => {
+        try {
+            console.log(newPost);
+			const resp = await axios.post(`http://10.125.121.183:8080/board/write`, newPost);
+			setSelectedItem(null);
+            loadBoardData();
+			console.log("Board write: ", resp.data);
+		} catch (error) {
+			console.error("보드데이터 글쓰기 실패", error);
+		}
+    };
+
+    const boardEdit = async (newPost) => {
+        try {
+            console.log(newPost);
+			const resp = await axios.post(`http://10.125.121.183:8080/board/update`, newPost);
+			setSelectedItem(null);
+			console.log("Board edit: ", resp.data);
+		} catch (error) {
+			console.error("보드데이터 글수정 실패", error);
+		}
+    };
+
+    const boardvisit = async (newPost) => {
+        try {
+			const resp = await axios.post(`http://10.125.121.183:8080/board/update`, newPost);
+		} catch (error) {
+			console.error("보드데이터 글수정 실패", error);
+		}
+    };
+
+    const boardSearch = async () => {
+        try {
+			const resp = await axios.get(`http://10.125.121.183:8080/board/find?keyword=${searchKey}`);
+            setBoardData(resp.data);
+			setSearchKey(null);
+			console.log("Board edit: ", resp.data);
+		} catch (error) {
+			console.error("보드데이터 검색 실패", error);
+		}
+    };
+
 	useEffect(() => {
 		loadBoardData();
-	}, []);
+        console.log("보드 새로불러옴");
+	},[]);
 	
     for (let i = 1; i <= totalPages; i++) {
         pageNum.push(i);
     };
 
+    const handleSearchKeyword = () => {
+        boardSearch();
+    };
+
     const handleItemClick = (item) => {
         setSelectedItem(item);
+        item.visit_count = item.visit_count + 1;
+        boardvisit(item);
         setDetailOpen(true);
         setWriteOpen(false); // 글쓰기 창 닫기
         setEditOpen(false);
@@ -73,6 +139,12 @@ const BoardModal = ({ isOpen, onClose }) => {
             alert("로그인후 글수정이 가능합니다.");
             return;
         }
+        
+        if(loginRole === 'ROLE_ADMIN') {
+        }else if(selectedItem.username !== loginUser){
+            alert("작성자 본인만 수정할수있습니다.");
+            return;
+        }
         setEditOpen(true);
         setDetailOpen(false);
     };
@@ -86,8 +158,12 @@ const BoardModal = ({ isOpen, onClose }) => {
             alert("로그인후 글삭제가 가능합니다.");
             return;
         }
-        const updateBoardData = boardData.filter(item => item.idx !== selectedItem.idx);
-        setBoardData(updateBoardData);
+        if(loginRole === 'ROLE_ADMIN') {
+        }else if(selectedItem.username !== loginUser){
+            alert("작성자 본인만 삭제할수있습니다.");
+            return;
+        }
+        boardDel();
         setDetailOpen(false);
         setSelectedItem(null);
     }
@@ -95,27 +171,25 @@ const BoardModal = ({ isOpen, onClose }) => {
     const handleSubmit = (newPost) => {
         console.log("newPost : ", newPost);
         if (editOpen){
-            const updateBoardData = boardData.map(item =>
-                item.idx === newPost.idx ? newPost : item
-            );
-            setBoardData(updateBoardData);
             setEditOpen(false);
             setDetailOpen(true);
+            boardEdit(newPost);
         } else {
-            setBoardData([newPost, ...boardData]); // 새 글을 앞에 추가
             setWriteOpen(false); // 글쓰기 창 닫기
+            setSelectedItem(newPost);
+            boardWrite(newPost);
         };
-        setSelectedItem(newPost);
+        
     };
 
     return (
         <div className='fixed inset-0 bg-gray-800 bg-opacity-75 flex flex-col items-center justify-center z-30 font-["NanumGodic"]'>
             <div className='bg-white p-5 rounded-md shadow-lg w-3/4 relative bg-gradient-to-t from-white to-blue-50'>
-            <img src='./img/Exit.png' onClick={onClose} className='absolute top-5 right-5 w-7 h-7 border-2 border-black rounded-md cursor-pointer'></img>
+            <img src='./img/Exit.png' onClick={onClose} className='absolute top-5 right-5 w-7 h-7 cursor-pointer'></img>
 
                 {/* 글쓰기 페이지 */}
                 {writeOpen || editOpen ? (
-                    <BoardWrite onSubmit={handleSubmit} onClose={writeOpen ? handleWriteClose : handleEditClose} initialData={selectedItem || {}} />
+                    <BoardWrite onSubmit={handleSubmit} onClose={writeOpen ? handleWriteClose : handleEditClose} initialData={selectedItem || {}} user={loginUser} nick={loginNick} />
                 ) : detailOpen && selectedItem ? (
                     <div className="detail-container p-6 rounded-lg bg-gray-100 shadow-md">
                         <h2 className="text-2xl font-bold text-blue-700 mb-4">{selectedItem.title}</h2>
@@ -124,7 +198,7 @@ const BoardModal = ({ isOpen, onClose }) => {
                             <p className="text-sm text-gray-500">조회수: {selectedItem.visit_count}</p>
                         </div>
                         <p className="text-md text-gray-700 mb-6"><strong>작성자:</strong> {selectedItem.username}</p>
-                        <p className="text-md text-gray-700 mb-6"><strong>작성일:</strong> {new Date(selectedItem.regidate_date).toLocaleString()}</p>
+                        <p className="text-md text-gray-700 mb-6"><strong>작성일:</strong> {format(parseISO(selectedItem.regidate_date), 'yyyy-MM-dd HH:mm:ss')}</p>
                         <p className="text-md text-gray-800 mb-6"><strong>내용:</strong> {selectedItem.content}</p>
                         <div className='flex justify-end space-x-4'>
                             <button onClick={handleEditClick} className='px-4 py-2 bg-yellow-500 rounded hover:bg-yellow-600'>
@@ -140,14 +214,24 @@ const BoardModal = ({ isOpen, onClose }) => {
                     </div>
                 ) : (
                     <div>
-                        <h2 className="text-5xl my-8 text-center font-extrabold font-['DanJo']">게 시 판</h2>
+                        <h2 className="text-5xl my-8 text-center font-extrabold font-['DanJo']">시 설 이 용 게 시 판</h2>
+                        <div className='flex justify-between'>
                         <button onClick={handleWriteClick} className='mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600'>글쓰기</button>
+                            <div className='flex'>
+                                <input type="text" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} 
+                                    className="border-2 border-gray-300 p-2 rounded-md w-full h-10"/>
+                                <button onClick={handleSearchKeyword}
+                                        className=" w-16 h-10 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition-colors">
+                                    검색
+                                </button>
+                            </div>
+                        </div>
                         <table className='w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden my-4'>
                             <thead className='bg-gray-200'>
                                 <tr>
                                     <th className='p-3 text-left text-sm font-semibold text-gray-700'>글번호</th>
                                     <th className='p-3 text-left text-sm font-semibold text-gray-700'>제목</th>
-                                    <th className='p-3 text-left text-sm font-semibold text-gray-700'>닉네임</th>
+                                    <th className='p-3 text-left text-sm font-semibold text-gray-700'>작성자</th>
                                     <th className='p-3 text-left text-sm font-semibold text-gray-700'>게시한 날짜</th>
                                     <th className='p-3 text-left text-sm font-semibold text-gray-700'>조회수</th>
                                 </tr>
@@ -159,8 +243,8 @@ const BoardModal = ({ isOpen, onClose }) => {
                                             onClick={() => handleItemClick(item)}>
                                             <td className='p-3 text-sm text-gray-800'>{item.idx}</td>
                                             <td className='p-3 text-sm text-gray-800'>{item.title}</td>
-                                            <td className='p-3 text-sm text-gray-800'>{item.username}</td>
-                                            <td className='p-3 text-sm text-gray-800'>{new Date(item.regidate_date).toLocaleDateString()}</td>
+                                            <td className='p-3 text-sm text-gray-800'>{item.nickname}</td>
+                                            <td className='p-3 text-sm text-gray-800'>{format(parseISO(item.regidate_date), 'yyyy-MM-dd HH:mm:ss')}</td>
                                             <td className='p-3 text-sm text-gray-800'>{item.visit_count}</td>
                                         </tr>
                                     ))

@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 
-const BoardWrite = ({ onSubmit, onClose, initialData }) => {
+const BoardWrite = ({ onSubmit, onClose, initialData, user, nick }) => {
     const [title, setTitle] = useState(initialData.title || '');
-    const [username, setUsername] = useState(initialData.username || '');
     const [content, setContent] = useState(initialData.content || '');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const newPost = {
             ...initialData,
-            idx: initialData.idx || Math.floor(Math.random() * 1000) + 1,  // 고유 idx 생성
-            title,
-            username,
-            content,
+            idx: initialData.idx || '',
+            title: title,
+            username: user || '',
+            nickname: initialData.nickname ? initialData.nickname : nick ,
+            content: content,
             regidate_date: initialData.regidate_date || new Date().toISOString(),
             visit_count: initialData.visit_count || 0,
         };
@@ -27,11 +27,6 @@ const BoardWrite = ({ onSubmit, onClose, initialData }) => {
                     <label className="block text-sm font-medium text-gray-700">제목</label>
                     <input type="text" className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                         value={title} onChange={(e) => setTitle(e.target.value)} required />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">닉네임</label>
-                    <input type="text" className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                        value={username} onChange={(e) => setUsername(e.target.value)} required />
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">내용</label>
