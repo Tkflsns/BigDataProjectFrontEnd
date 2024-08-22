@@ -1,7 +1,7 @@
 import ReactDOMServer from 'react-dom/server';
 import { useRef } from 'react';
 
-export default function Setmarker({ tm, markerImgSrc, map }) {
+export default function SetMarker({ tm, markerImgSrc, map }) {
     const overlayRefs = useRef([]); // 오버레이 객체들을 저장하는 배열
 
     if (!tm || tm.length === 0) return;
