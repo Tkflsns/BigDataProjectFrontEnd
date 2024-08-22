@@ -35,11 +35,12 @@ export default function NavBar() {
 
 	const handleDelId = async () => {
 		if (!loginAuth) return;
-		const confirmDelete = window.confirm("정말 이글을 삭제하시겠습니까?");
+		const confirmDelete = window.confirm("정말 회원을 탈퇴하시겠습니까?");
         if (!confirmDelete) return;
 		try{
 		const resp = await axios.delete(`http://10.125.121.183:8080/delete?username=${loginUser}`);
 		console.log("회원탈퇴 : ", resp);
+		alert("회원탈퇴 되었습니다.");
 
 		dispatch(logoutSuccess());
 		localStorage.removeItem('accessToken');
@@ -54,15 +55,15 @@ export default function NavBar() {
 	return (
 		<>
 			<div className="bg-gradient-to-br from-white to-blue-50 shadow-md w-full z-20 font-['HanEumB']">
-				<div className="container mx-auto flex items-center py-4 px-6 justify-between">
-						<div className="flex text-2xl font-extrabold text-blue-600 justify-between">
+				<div className="w-full mx-2 flex items-center py-4 px-6 justify-between">
+						<div className="text-2xl font-extrabold text-blue-600 -mr-56">
 							K-Digital 7기 : 7조 공공개방시설 안내 웹서비스
-						<ul className="flex space-x-20 ml-10">
+						</div>
+						<ul className="flex space-x-20">
 							<li><a href="/" className="text-gray-700 hover:text-blue-600 transition duration-200 font-bold text-xl">시설검색</a></li>
 							<li><a onClick={() => setBoardOpen(true)} className="cursor-pointer text-gray-700 hover:text-blue-600 transition duration-200 font-bold text-xl">게시판</a></li>
 							<li><a onClick={() => setIntroOpen(true)} className="cursor-pointer text-gray-700 hover:text-blue-600 transition duration-200 font-bold text-xl">소개</a></li>
 						</ul>
-						</div>
 						<div className="flex items-center space-x-4 mx-5">
 							{loginAuth ? <span>{loginNick}님 로그인</span> : null}
 							<button type="button"

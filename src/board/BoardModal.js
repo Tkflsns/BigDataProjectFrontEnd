@@ -54,7 +54,7 @@ const BoardModal = ({ isOpen, onClose }) => {
     const boardDel = async () => {
         try {
             console.log(selectedItem);
-			const resp = await axios.delete(`http://10.125.121.183:8080/board/delete`, selectedItem);
+			const resp = await axios.delete(`http://10.125.121.183:8080/board/delete/${selectedItem.idx}`);
             setSelectedItem(null);
             loadBoardData();
 			console.log("Board Del: ", resp.data);
@@ -82,6 +82,7 @@ const BoardModal = ({ isOpen, onClose }) => {
             console.log(newPost);
 			const resp = await axios.put(`http://10.125.121.183:8080/board/update`, newPost);
 			setSelectedItem(null);
+            loadBoardData();
 			console.log("Board edit: ", resp.data);
 		} catch (error) {
 			console.error("보드데이터 글수정 실패", error);
