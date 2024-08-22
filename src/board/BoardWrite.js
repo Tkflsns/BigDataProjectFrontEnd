@@ -30,7 +30,7 @@ const BoardWrite = ({ onSubmit, onClose, initialData, user, nick }) => {
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">내용</label>
-                    <textarea className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                    <textarea className="mt-1 block w-full p-2 border border-gray-300 rounded-md whitespace-pre-wrap"
                         rows="5" value={content} onChange={(e) => setContent(e.target.value)} required />
                 </div>
                 <div className="flex justify-between">

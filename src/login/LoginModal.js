@@ -18,12 +18,12 @@ const LoginModal = ({ isOpen, onClose }) => {
 
         console.log("logindata : ", data1);
         try {
-            const response = await axios.post('http://10.125.121.183:8080/login', data1);
+            const resp = await axios.post('http://10.125.121.183:8080/login', data1);
 
-            const token = response.data.token;
-            const nick = response.data.nickname;
-            const user = response.data.username;
-            const role = response.data.role;
+            const token = resp.data.token;
+            const nick = resp.data.nickname;
+            const user = resp.data.username;
+            const role = resp.data.role;
 
             dispatch(loginSuccess({ user, nick, role, token}));
             localStorage.setItem("accessToken", token);
@@ -32,22 +32,13 @@ const LoginModal = ({ isOpen, onClose }) => {
             localStorage.setItem("role", role);
 
             console.log("Token : ", localStorage.getItem("accessToken"));
-            console.log("res : ", response);
+            console.log("res : ", resp);
             onClose();
         } catch (error) {
             console.error("로그인 실패 : ", error);
             alert("로그인 실패");
         }
     }
-
-    useEffect(() => {
-        const params = new window.URLSearchParams(window.location.search);
-        const token = params.get("token");
-
-        if (token) {
-           
-        }
-    }, []);
 
     return (
         <div className='fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 '>

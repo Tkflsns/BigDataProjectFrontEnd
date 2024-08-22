@@ -9,18 +9,20 @@ export default function SideBarMain({Data, parking, classroom, cultural, sports}
 	const handleChange = () => {
 		if (!Data || Data.length === 0) return;
 		let ScData = [];
+		console.log(Data);
 		if (selRef.current.value != 'ALL'){
 		ScData = Data.filter(item => item.code === selRef.current.value)
-							.map(item => <SideContent tmData={item}/>);
+							.map(item => <SideContent key={item.rsrcNo} tmData={item}/>);
 		}else{
-		ScData = Data.map(item => <SideContent tmData={item}/>);
+		ScData = Data.map(item => <SideContent key={item.rsrcNo} tmData={item}/>);
 		}
 		setSc(ScData);
 	}
 
 	useEffect(() => {
-		const ScData = Data.map(item => <SideContent tmData={item}/>);
+		const ScData = Data.map(item => <SideContent key={item.rsrcNo} tmData={item}/>);
 		setSc(ScData);
+		selRef.current.value = 'ALL';
 	},[Data]);
 
 	return (
@@ -34,7 +36,7 @@ export default function SideBarMain({Data, parking, classroom, cultural, sports}
                            text-gray-900 text-sm rounded-lg
                            focus:ring-blue-500 focus:border-blue-500
                            block w-full p-2.5 font-bold text-center my-2'>
-                <option Value='ALL' className='font-bold'>전체보기</option>
+                <option value='ALL' className='font-bold'>전체보기</option>
                 {parking &&<option value="parking" className='font-bold'>주차장</option>}
                 {classroom && <option value="classroom" className='font-bold'>강의실, 회의실</option>}
                 {cultural && <option value="cultural" className='font-bold'>문화, 숙박</option>}
